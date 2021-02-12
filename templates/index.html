@@ -7,12 +7,14 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@scavengerbot/cryptofont/style.min.css">
     <link class="theme" rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <title>LickHunter 24h Liquidation Data</title>
+    <title>Binance 24h Liquidation Data</title>
     <script>
       function loadref(time) {
         setTimeout("location.reload(true) ;",time) ;
       }
       window.onload = function () {
+
+        loadref(30000);
 
         var timebot = "{{ time }}"
 
@@ -188,15 +190,13 @@
               });
               chart.render();
 
-          loadref(30000);
-
         }
     </script>
   </head>
   <body class="w3-theme-l1">
     <div class="w3-row-padding">
       <div class="w3-twothird">
-        <h1 class="w3-wide"><span class="sbi sbi-btc"></span> LickHunter 24h Liquidation Data</h1>
+        <h1 class="w3-wide"><span class="sbi sbi-btc"></span> Binance 24h Liquidation Data</h1>
       </div>
       <div class="w3-third w3-right-align">
         <div>Tip The Author : ETH/USDT/ERC20 0x4EF84bB3908EE77EA0B1f5BECB185804beC5352d</div>
