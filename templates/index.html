@@ -9,183 +9,188 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>LickHunter 24h Liquidation Data</title>
     <script>
-window.onload = function () {
+      function loadref(time) {
+        setTimeout("location.reload(true) ;",time) ;
+      }
+      window.onload = function () {
 
-  var timebot = "{{ time }}"
+        var timebot = "{{ time }}"
 
-  var chart = new CanvasJS.Chart("chartLiqVolume", {
-  	animationEnabled: true,
-    theme: "dark1", // "light1", "light2", "dark1", "dark2"
-  	title:{
-  		text: "Top 10 burned by Volume",
-  	},
-  	data: [{
-  		type: "pie",
-  		startAngle: 60,
-      yValueFormatString: "$##0.00",
-      indexLabel: "{label} - {y}",
-  		dataPoints: [
-        {% for size in sizes %}
-          {"label":"{{ size[0] }}","y":{{ size[1] }}},
-        {% endfor %}
-      ]
-	  }]
-  });
-  chart.render();
-
-  var chart = new CanvasJS.Chart("chartLiqAmount", {
-  	animationEnabled: true,
-    theme: "dark1", // "light1", "light2", "dark1", "dark2"
-  	title:{
-  		text: "Top 10 by Liq-Events",
-  	},
-  	data: [{
-  		type: "pie",
-  		startAngle: 60,
-      yValueFormatString: "##0.00",
-      indexLabel: "{label} - {y}",
-  		dataPoints: [
-        {% for amount in amounts %}
-          {"label":"{{ amount[0] }}","y":{{ amount[1] }}},
-        {% endfor %}
-      ]
-	  }]
-  });
-  chart.render();
-
-  var chart = new CanvasJS.Chart("chartAVGVolume", {
-    animationEnabled: true,
-    theme: "dark1", // "light1", "light2", "dark1", "dark2"
-    title:{
-      text: "Average Liq-Volume in USD"
-    },
-    data: [{
-      type: "column",
-      yValueFormatString: "$##0.00",
-      dataPoints: [
-         {% for data in datas %}
-           {"label":"{{ data[0] }}","y":{{ data[1] }}},
-         {% endfor %}
-       ]
-     }]
-   });
-   chart.render();
-
-   var chart = new CanvasJS.Chart("chartAVGLiq", {
- 	   animationEnabled: true,
-     theme: "dark1", // "light1", "light2", "dark1", "dark2"
- 	   title:{
-        text:"Average Liq-Amount"
- 	   },
-     data: [{
-       type: "column",
-       yValueFormatString: "##0.00",
-       dataPoints: [
-         {% for data in datas %}
-           {"label":"{{ data[0] }}","y":{{ data[2] }}},
-         {% endfor %}
-       ]
-     }]
-   });
-   chart.render();
-
-     var chart = new CanvasJS.Chart("markettoppercent", {
-       animationEnabled: true,
-       theme: "dark1", // "light1", "light2", "dark1", "dark2"
-       title:{
-         text: "Top Gainers %"
-       },
-       data: [{
-         type: "pie",
-     		startAngle: 60,
-        yValueFormatString: "##0.00\"%\"",
-        indexLabel: "{label} - {y}",
-         dataPoints: [
-           {% for top in top10 %}
-             {"label":"{{ top['coin'] }}","y":{{ top['percent'] }}},
-           {% endfor %}
-          ]
-        }]
-      });
-      chart.render();
-
-     var chart = new CanvasJS.Chart("marketlowpercent", {
-       animationEnabled: true,
-       theme: "dark1", // "light1", "light2", "dark1", "dark2"
-       title:{
-         text: "Top Losers %"
-       },
-       data: [{
-         type: "pie",
-     		startAngle: 60,
-        yValueFormatString: "##0.00\"%\"",
-        indexLabel: "{label} - {y}",
-         dataPoints: [
-           {% for low in low10 %}
-             {"label":"{{ low['coin'] }}","y":{{ low['percent'] }}},
-           {% endfor %}
-          ]
-        }]
-      });
-      chart.render();
-
-     var chart = new CanvasJS.Chart("marketvolume", {
-       animationEnabled: true,
-       theme: "dark1", // "light1", "light2", "dark1", "dark2"
-       title:{
-         text: "Market Volumes"
-       },
-       data: [{
-         type: "pie",
-     		 startAngle: 60,
-         yValueFormatString: "$##0.00",
-         indexLabel: "{label} - {y}",
-         dataPoints: [
-           {% for market in markets %}
-             {"label":"{{ market['coin'] }}","y":{{ market['volume'] }}},
-           {% endfor %}
-          ]
-        }]
-      });
-      chart.render();
-
-      var chart = new CanvasJS.Chart("marketprice", {
-        animationEnabled: true,
-        theme: "dark1", // "light1", "light2", "dark1", "dark2"
-        title:{
-          text: "Market Prices"
-        },
-        data: [{
-          type: "doughnut",
-      		 startAngle: 60,
-          dataPoints: [
-             {% for market in markets %}
-               {"label":"{{ market['coin'] }}","y":{{ market['price'] }}},
-             {% endfor %}
-           ]
-         }]
-       });
-       chart.render();
-
-       var chart = new CanvasJS.Chart("marketpercent", {
-         animationEnabled: true,
-         theme: "dark1", // "light1", "light2", "dark1", "dark2"
-         title:{
-           text: "Market Percentages"
-         },
-         data: [{
-           type: "doughnut",
-       		startAngle: 60,
-           dataPoints: [
-             {% for market in markets %}
-               {"label":"{{ market['coin'] }}","y":{{ market['percent'] }}},
-             {% endfor %}
+        var chart = new CanvasJS.Chart("chartLiqVolume", {
+        	animationEnabled: true,
+          theme: "dark1", // "light1", "light2", "dark1", "dark2"
+        	title:{
+        		text: "Top 10 burned by Volume",
+        	},
+        	data: [{
+        		type: "pie",
+        		startAngle: 60,
+            yValueFormatString: "$##0.00",
+            indexLabel: "{label} - {y}",
+        		dataPoints: [
+              {% for size in sizes %}
+                {"label":"{{ size[0] }}","y":{{ size[1] }}},
+              {% endfor %}
             ]
-          }]
+      	  }]
         });
         chart.render();
 
-}
+        var chart = new CanvasJS.Chart("chartLiqAmount", {
+        	animationEnabled: true,
+          theme: "dark1", // "light1", "light2", "dark1", "dark2"
+        	title:{
+        		text: "Top 10 by Liq-Events",
+        	},
+        	data: [{
+        		type: "pie",
+        		startAngle: 60,
+            yValueFormatString: "##0.00",
+            indexLabel: "{label} - {y}",
+        		dataPoints: [
+              {% for amount in amounts %}
+                {"label":"{{ amount[0] }}","y":{{ amount[1] }}},
+              {% endfor %}
+            ]
+      	  }]
+        });
+        chart.render();
+
+        var chart = new CanvasJS.Chart("chartAVGVolume", {
+          animationEnabled: true,
+          theme: "dark1", // "light1", "light2", "dark1", "dark2"
+          title:{
+            text: "Average Liq-Volume in USD"
+          },
+          data: [{
+            type: "column",
+            yValueFormatString: "$##0.00",
+            dataPoints: [
+               {% for data in datas %}
+                 {"label":"{{ data[0] }}","y":{{ data[1] }}},
+               {% endfor %}
+             ]
+           }]
+         });
+         chart.render();
+
+         var chart = new CanvasJS.Chart("chartAVGLiq", {
+       	   animationEnabled: true,
+           theme: "dark1", // "light1", "light2", "dark1", "dark2"
+       	   title:{
+              text:"Average Liq-Amount"
+       	   },
+           data: [{
+             type: "column",
+             yValueFormatString: "##0.00",
+             dataPoints: [
+               {% for data in datas %}
+                 {"label":"{{ data[0] }}","y":{{ data[2] }}},
+               {% endfor %}
+             ]
+           }]
+         });
+         chart.render();
+
+         var chart = new CanvasJS.Chart("markettoppercent", {
+           animationEnabled: true,
+           theme: "dark1", // "light1", "light2", "dark1", "dark2"
+           title:{
+             text: "Top Gainers %"
+           },
+           data: [{
+             type: "pie",
+         		startAngle: 60,
+            yValueFormatString: "##0.00\"%\"",
+            indexLabel: "{label} - {y}",
+             dataPoints: [
+               {% for top in top10 %}
+                 {"label":"{{ top['coin'] }}","y":{{ top['percent'] }}},
+               {% endfor %}
+              ]
+            }]
+          });
+          chart.render();
+
+          var chart = new CanvasJS.Chart("marketlowpercent", {
+            animationEnabled: true,
+            theme: "dark1", // "light1", "light2", "dark1", "dark2"
+            title:{
+              text: "Top Losers %"
+            },
+            data: [{
+              type: "pie",
+          		startAngle: 60,
+             yValueFormatString: "##0.00\"%\"",
+             indexLabel: "{label} - {y}",
+              dataPoints: [
+                {% for low in low10 %}
+                  {"label":"{{ low['coin'] }}","y":{{ low['percent'] }}},
+                {% endfor %}
+               ]
+             }]
+           });
+           chart.render();
+
+           var chart = new CanvasJS.Chart("marketvolume", {
+             animationEnabled: true,
+             theme: "dark1", // "light1", "light2", "dark1", "dark2"
+             title:{
+               text: "Market Volumes"
+             },
+             data: [{
+               type: "pie",
+           		 startAngle: 60,
+               yValueFormatString: "$##0.00",
+               indexLabel: "{label} - {y}",
+               dataPoints: [
+                 {% for market in markets %}
+                   {"label":"{{ market['coin'] }}","y":{{ market['volume'] }}},
+                 {% endfor %}
+                ]
+              }]
+            });
+            chart.render();
+
+            var chart = new CanvasJS.Chart("marketprice", {
+              animationEnabled: true,
+              theme: "dark1", // "light1", "light2", "dark1", "dark2"
+              title:{
+                text: "Market Prices"
+              },
+              data: [{
+                type: "doughnut",
+            		 startAngle: 60,
+                dataPoints: [
+                   {% for market in markets %}
+                     {"label":"{{ market['coin'] }}","y":{{ market['price'] }}},
+                   {% endfor %}
+                 ]
+               }]
+             });
+             chart.render();
+
+             var chart = new CanvasJS.Chart("marketpercent", {
+               animationEnabled: true,
+               theme: "dark1", // "light1", "light2", "dark1", "dark2"
+               title:{
+                 text: "Market Percentages"
+               },
+               data: [{
+                 type: "doughnut",
+             		startAngle: 60,
+                 dataPoints: [
+                   {% for market in markets %}
+                     {"label":"{{ market['coin'] }}","y":{{ market['percent'] }}},
+                   {% endfor %}
+                  ]
+                }]
+              });
+              chart.render();
+
+          loadref(30000);
+
+        }
     </script>
   </head>
   <body class="w3-theme-l1">
