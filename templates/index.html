@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@scavengerbot/cryptofont/style.min.css">
+    <link class="theme" rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>LickHunter 24h Liquidation Data</title>
+    <script>
+window.onload = function () {
+
+  var timebot = "{{ time }}"
+
+  var chart = new CanvasJS.Chart("chartLiqVolume", {
+  	animationEnabled: true,
+    theme: "dark1", // "light1", "light2", "dark1", "dark2"
+  	title:{
+  		text: "Top 10 burned by Volume",
+  	},
+  	data: [{
+  		type: "pie",
+  		startAngle: 60,
+      yValueFormatString: "$##0.00",
+      indexLabel: "{label} - {y}",
+  		dataPoints: [
+        {% for size in sizes %}
+          {"label":"{{ size[0] }}","y":{{ size[1] }}},
+        {% endfor %}
+      ]
+	  }]
+  });
+  chart.render();
+
+  var chart = new CanvasJS.Chart("chartLiqAmount", {
+  	animationEnabled: true,
+    theme: "dark1", // "light1", "light2", "dark1", "dark2"
+  	title:{
+  		text: "Top 10 by Liq-Events",
+  	},
+  	data: [{
+  		type: "pie",
+  		startAngle: 60,
+      yValueFormatString: "##0.00",
+      indexLabel: "{label} - {y}",
+  		dataPoints: [
+        {% for amount in amounts %}
+          {"label":"{{ amount[0] }}","y":{{ amount[1] }}},
+        {% endfor %}
+      ]
+	  }]
+  });
+  chart.render();
+
+  var chart = new CanvasJS.Chart("chartAVGVolume", {
+    animationEnabled: true,
+    theme: "dark1", // "light1", "light2", "dark1", "dark2"
+    title:{
+      text: "Average Liq-Volume in USD"
+    },
+    data: [{
+      type: "column",
+      yValueFormatString: "$##0.00",
+      dataPoints: [
+         {% for data in datas %}
+           {"label":"{{ data[0] }}","y":{{ data[1] }}},
+         {% endfor %}
+       ]
+     }]
+   });
+   chart.render();
+
+   var chart = new CanvasJS.Chart("chartAVGLiq", {
+ 	   animationEnabled: true,
+     theme: "dark1", // "light1", "light2", "dark1", "dark2"
+ 	   title:{
+        text:"Average Liq-Amount"
+ 	   },
+     data: [{
+       type: "column",
+       yValueFormatString: "##0.00",
+       dataPoints: [
+         {% for data in datas %}
+           {"label":"{{ data[0] }}","y":{{ data[2] }}},
+         {% endfor %}
+       ]
+     }]
+   });
+   chart.render();
+
+     var chart = new CanvasJS.Chart("markettoppercent", {
+       animationEnabled: true,
+       theme: "dark1", // "light1", "light2", "dark1", "dark2"
+       title:{
+         text: "Top Gainers %"
+       },
+       data: [{
+         type: "pie",
+     		startAngle: 60,
+        yValueFormatString: "##0.00\"%\"",
+        indexLabel: "{label} - {y}",
+         dataPoints: [
+           {% for top in top10 %}
+             {"label":"{{ top['coin'] }}","y":{{ top['percent'] }}},
+           {% endfor %}
+          ]
+        }]
+      });
+      chart.render();
+
+     var chart = new CanvasJS.Chart("marketlowpercent", {
+       animationEnabled: true,
+       theme: "dark1", // "light1", "light2", "dark1", "dark2"
+       title:{
+         text: "Top Losers %"
+       },
+       data: [{
+         type: "pie",
+     		startAngle: 60,
+        yValueFormatString: "##0.00\"%\"",
+        indexLabel: "{label} - {y}",
+         dataPoints: [
+           {% for low in low10 %}
+             {"label":"{{ low['coin'] }}","y":{{ low['percent'] }}},
+           {% endfor %}
+          ]
+        }]
+      });
+      chart.render();
+
+     var chart = new CanvasJS.Chart("marketvolume", {
+       animationEnabled: true,
+       theme: "dark1", // "light1", "light2", "dark1", "dark2"
+       title:{
+         text: "Market Volumes"
+       },
+       data: [{
+         type: "pie",
+     		 startAngle: 60,
+         yValueFormatString: "$##0.00",
+         indexLabel: "{label} - {y}",
+         dataPoints: [
+           {% for market in markets %}
+             {"label":"{{ market['coin'] }}","y":{{ market['volume'] }}},
+           {% endfor %}
+          ]
+        }]
+      });
+      chart.render();
+
+      var chart = new CanvasJS.Chart("marketprice", {
+        animationEnabled: true,
+        theme: "dark1", // "light1", "light2", "dark1", "dark2"
+        title:{
+          text: "Market Prices"
+        },
+        data: [{
+          type: "doughnut",
+      		 startAngle: 60,
+          dataPoints: [
+             {% for market in markets %}
+               {"label":"{{ market['coin'] }}","y":{{ market['price'] }}},
+             {% endfor %}
+           ]
+         }]
+       });
+       chart.render();
+
+       var chart = new CanvasJS.Chart("marketpercent", {
+         animationEnabled: true,
+         theme: "dark1", // "light1", "light2", "dark1", "dark2"
+         title:{
+           text: "Market Percentages"
+         },
+         data: [{
+           type: "doughnut",
+       		startAngle: 60,
+           dataPoints: [
+             {% for market in markets %}
+               {"label":"{{ market['coin'] }}","y":{{ market['percent'] }}},
+             {% endfor %}
+            ]
+          }]
+        });
+        chart.render();
+
+}
+    </script>
+  </head>
+  <body class="w3-theme-l1">
+    <div class="w3-row-padding">
+      <div class="w3-twothird">
+        <h1 class="w3-wide"><span class="sbi sbi-btc"></span> LickHunter 24h Liquidation Data</h1>
+      </div>
+      <div class="w3-third w3-right-align">
+        <div>Tip The Author : ETH/USDT/ERC20 0x4EF84bB3908EE77EA0B1f5BECB185804beC5352d</div>
+        <div>Server Time : {{ time }}</div>
+      </div>
+    </div>
+    <div class="w3-row">
+      <div class="w3-card-4 w3-col s11 m5 l3 w3-margin" id="chartLiqVolume" style="height: 370px; width: 48%;"></div>
+      <div class="w3-card-4 w3-col s11 m5 l3 w3-margin" id="chartLiqAmount" style="height: 370px; width: 48%;"></div>
+      <div class="w3-card-4 w3-col s11 m5 l3 w3-margin" id="chartAVGVolume" style="height: 370px; width: 98%;"></div>
+      <div class="w3-card-4 w3-col s11 m5 l3 w3-margin" id="chartAVGLiq" style="height: 370px; width: 98%;"></div>
+      <div class="w3-card-4 w3-col s11 m5 l3 w3-margin" id="markettoppercent" style="height: 370px; width: 31.5%;"></div>
+      <div class="w3-card-4 w3-col s11 m5 l3 w3-margin" id="marketlowpercent" style="height: 370px; width: 31.5%;"></div>
+      <div class="w3-card-4 w3-col s11 m5 l3 w3-margin" id="marketvolume" style="height: 370px; width: 31.5%;"></div>
+      <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    </div>
+  </body>
+</html>
