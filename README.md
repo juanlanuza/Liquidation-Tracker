@@ -1,6 +1,8 @@
 ## Liquidation-Tracker
 Simple Bot to track liquidation on Binance using Python, SQLite, &amp; Flask
 
+Base on [https://github.com/CryptoGnome/Crypto-Tracker] by CryptoGnome
+
 ![IMAGE ALT TEXT HERE](https://atsutanedotnet.files.wordpress.com/2021/02/liquidation-tracker.png)
 
 # SETUP GUIDE
