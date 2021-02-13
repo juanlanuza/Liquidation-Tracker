@@ -12,6 +12,7 @@ def index():
         today = str(todayCalc)
 
         now = datetime.datetime.now()
+        ts = now.timestamp()
         time = now.strftime("%m/%d/%Y, %H:%M:%S")
 
         conn = sqlite3.connect('liquidation.db')
@@ -32,7 +33,7 @@ def index():
         conn.commit()
         conn.close()
 
-        return render_template('index.html',time = time,sizes = sizes,amounts = amounts,datas = datas,markets = markets,top10 = top10,low10 = low10)
+        return render_template('index.html',time = time,ts = ts,sizes = sizes,amounts = amounts,datas = datas,markets = markets,top10 = top10,low10 = low10)
 
     except TypeError as missing_data:
         print(missing_data)
