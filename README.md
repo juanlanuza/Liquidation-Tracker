@@ -1,7 +1,7 @@
 ## Liquidation-Tracker
 Simple Bot to track liquidation on Binance using Python, SQLite, &amp; Flask
 
-Base on [https://github.com/CryptoGnome/Crypto-Tracker] by CryptoGnome. Original concept by Sanduckchan.
+Base on [https://github.com/CryptoGnome/Crypto-Tracker] by CryptoGnome. Original concept and design by Sanduckchan.
 
 ![IMAGE ALT TEXT HERE](https://atsutanedotnet.files.wordpress.com/2021/02/new-ui.png)
 
@@ -46,3 +46,9 @@ To view from outside source you must edit the web.py file to match your public I
 
 ## Donate
 ETH/USDT/ERC20: 0x4EF84bB3908EE77EA0B1f5BECB185804beC5352d
+
+## Donate to CryptoGnome - https://github.com/CryptoGnome
+ETH/USDT/ERC20: 0x647556545e529114B30E708dea09d64652e3c490
+
+## Donate to Sanduckchan - https://lickhunter.com/data
+ETH/USDT/ERC20: 0x1e733f4c6088a611e9077f94d2a0c0a570a6bb3f
