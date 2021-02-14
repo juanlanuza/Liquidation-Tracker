@@ -16,6 +16,7 @@ def index():
         ts = now.timestamp()
         yts = yday.timestamp()
         time = now.strftime("%m/%d/%Y, %H:%M:%S")
+        ytime = yday.strftime("%m/%d/%Y, %H:%M:%S")
 
         conn = sqlite3.connect('liquidation.db')
         conn.row_factory = sqlite3.Row
@@ -35,11 +36,11 @@ def index():
         conn.commit()
         conn.close()
 
-        return render_template('index.html',time = time,ts = ts,yts = yts,sizes = sizes,amounts = amounts,datas = datas,markets = markets,top10 = top10,low10 = low10)
+        return render_template('index.html',time = time,ytime = ytime,ts = ts,yts = yts,sizes = sizes,amounts = amounts,datas = datas,markets = markets,top10 = top10,low10 = low10)
 
     except TypeError as missing_data:
         print(missing_data)
         return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=8000,debug=True)
+    app.run(host="0.0.0.0", port=80,debug=True)
