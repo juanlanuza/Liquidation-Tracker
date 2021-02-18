@@ -8,7 +8,7 @@ def create():
     print("DB does not Exist Yet, Creating Now")
     conn = sqlite3.connect('liquidation.db')
     c = conn.cursor()
-    c.execute('CREATE TABLE liquidation (date text, coin text, price integer, qty integer, size integer, side text, time integer UNIQUE)')
+    c.execute('CREATE TABLE liquidation (date text, coin text, price integer UNIQUE, qty integer UNIQUE, size integer, side text, time integer UNIQUE)')
     conn.commit()
     conn.close()
 
