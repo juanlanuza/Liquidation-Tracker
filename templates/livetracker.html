@@ -1,0 +1,32 @@
+<div class="w3-row-padding">
+  <div class="w3-rest">
+    <h1 class="w3-wide"><span class="sbi sbi-btc"></span> Binance 24h Liquidation Data</h1>
+  </div>
+  <div class="w3-center">
+    <h5 class="w3-wide">Data Collected From {{ ytime }} UTC Until {{ time }} UTC</h5>
+  </div>
+</div>
+<div id="content" class="w3-row">
+  <table class="w3-table w3-centered">
+    <tr class="w3-theme">
+      <th>Pair</th>
+      <th>Price (USDT)</th>
+      <th>Trade Size (USDT)</th>
+      <th>Side</th>
+    </tr>
+  {% for data in datas %}
+    <tr>
+      <td>{{ data['coin'] }}</td>
+      <td>{{ data['price'] }}</td>
+      <td>{{ data['size'] }}</td>
+      <td>{{ data['side'] }}</td>
+    </tr>
+  {% endfor %}
+</table>
+</div>
+<div class="w3-row-padding">
+  <div class="w3-rest w3-right-align">
+    <h5 class="w3-wide">Tip The Author : ETH/USDT/ERC20 0x4EF84bB3908EE77EA0B1f5BECB185804beC5352d</h5>
+    <h5 class="w3-wide">Server Time : {{ time }} UTC</h5>
+  </div>
+</div>

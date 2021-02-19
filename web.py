@@ -42,5 +42,41 @@ def index():
         print(missing_data)
         return render_template('index.html')
 
+@app.route("/livetracker")
+def livetracker():
+    try:
+        print("Checking for Todays Data")
+        todayCalc = datetime.date.today()
+        today = str(todayCalc)
+
+        now = datetime.datetime.now()
+        yday = now - datetime.timedelta(days = 1)
+        ts = now.timestamp() * 1000
+        yts = yday.timestamp() * 1000
+        time = now.strftime("%m/%d/%Y, %H:%M:%S")
+        ytime = yday.strftime("%m/%d/%Y, %H:%M:%S")
+
+        conn = sqlite3.connect('liquidation.db')
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+        datas = c.execute('SELECT * FROM liquidation WHERE time > ? ORDER BY time DESC LIMIT 100', (yts,)).fetchall()
+        conn.commit()
+        conn.close()
+
+        return render_template('livetracker.html',time = time,ytime = ytime,ts = ts,yts = yts,datas = datas)
+
+    except TypeError as missing_data:
+        print(missing_data)
+        return render_template('livetracker.html')
+
+@app.route("/tracker")
+def tracker():
+    try:
+        return render_template('tracker.html')
+
+    except TypeError as missing_data:
+        print(missing_data)
+        return render_template('tracker.html')
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=80,debug=True)
