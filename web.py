@@ -13,8 +13,8 @@ def index():
 
         now = datetime.datetime.now()
         yday = now - datetime.timedelta(days = 1)
-        ts = now.timestamp()
-        yts = yday.timestamp()
+        ts = now.timestamp() * 1000
+        yts = yday.timestamp() * 1000
         time = now.strftime("%m/%d/%Y, %H:%M:%S")
         ytime = yday.strftime("%m/%d/%Y, %H:%M:%S")
 
