@@ -1,2 +1,2 @@
-web: python liquidation.py
+worker: python liquidation.py
 web: gunicorn web:app
