@@ -6,26 +6,28 @@ from time import sleep
 
 def create():
     print("DB does not Exist Yet, Creating Now")
-    conn = sqlite3.connect('liquidation.db')
+    conn = sqlite3.connect('tracker.db')
     c = conn.cursor()
-    c.execute('CREATE TABLE liquidation (date text, coin text, price integer, qty integer, size integer, side text, time integer UNIQUE)')
+    c.execute('CREATE TABLE liquidation (coin text, price integer, qty integer, size integer, side text, time integer UNIQUE)')
+    conn.commit()
+    c.execute('CREATE TABLE market (coin text UNIQUE, price integer, percent integer, volume integer)')
     conn.commit()
     conn.close()
 
 def read_db():
     print("Trying to Read DB")
     try:
-        conn = sqlite3.connect('liquidation.db')
+        conn = sqlite3.connect('tracker.db')
         c = conn.cursor()
         c.execute('SELECT * FROM  liquidation')
         data = c.fetchall()
         print(data)
     except sqlite3.OperationalError:
-        create(exchange)
+        create()
         conn.commit()
         conn.close()
 
-def binance():
+def liquidation():
     exchange_id = 'binance'
     exchange_class = getattr(ccxt, exchange_id)
     exchange = exchange_class({
@@ -38,7 +40,7 @@ def binance():
                 'private': 'https://fapi.binance.com/fapi/v1',
             }, }
     })
-    #get Account Balance
+    #get liquidation data
     liquidation = exchange.fapiPublicGetAllForceOrders()
 
     todayCalc = datetime.date.today()
@@ -51,17 +53,18 @@ def binance():
         qty = round(float(lick['executedQty']),4)
         size = round(qty * price,0)
         side = lick['side']
-        time = lick['time']
+        x = int(lick['time']) / 1000
+        time = datetime.datetime.utcfromtimestamp(x).strftime('%Y-%m-%d %H:%M:%S.%f')
 
         #read Current Data in DB
-        conn = sqlite3.connect('liquidation.db')
+        conn = sqlite3.connect('tracker.db')
         c = conn.cursor()
 
-        print("Inserting New Values")
+        print("Inserting New Liquidation Data")
         #Delete Existting Data when updating
         try:
-            c.execute('INSERT OR REPLACE INTO liquidation VALUES (?, ?, ?, ?, ?, ?, ?)',
-                      (today, coin, price, qty, size, side, time))
+            c.execute('INSERT OR REPLACE INTO liquidation VALUES (?, ?, ?, ?, ?, ?)',
+                      (coin, price, qty, size, side, time))
             conn.commit()
             conn.close()
         except OperationalError:
@@ -69,15 +72,69 @@ def binance():
             create()
             return
         except IndexError:
-            c.execute('INSERT OR REPLACE INTO liquidation VALUES (?, ?, ?, ?, ?, ?, ?)',
-                      (today, coin, price, qty, size, side, time))
+            c.execute('INSERT OR REPLACE INTO liquidation VALUES (?, ?, ?, ?, ?, ?)',
+                      (coin, price, qty, size, side, time))
             conn.commit()
             conn.close()
 
-        print("Data Added")
+        print("Liquidation Data Added")
+
+def market():
+    exchange_id = 'binance'
+    exchange_class = getattr(ccxt, exchange_id)
+    exchange = exchange_class({
+        'timeout': 30000,
+        'enableRateLimit': True,
+        'option': {'defaultMarket': 'futures'},
+        'urls': {
+            'api': {
+                'public': 'https://fapi.binance.com/fapi/v1',
+                'private': 'https://fapi.binance.com/fapi/v1',
+            }, }
+    })
+    #get market data
+    market = exchange.fapiPublicGetTicker24hr()
+
+    todayCalc = datetime.date.today()
+    today = str(todayCalc)
+
+    #read Current Data in DB
+    conn = sqlite3.connect('tracker.db')
+    c = conn.cursor()
+
+    for data in market:
+        coin = data['symbol']
+        coin = coin.replace("USDT","")
+        price = float(data['lastPrice'])
+        percent = round(float(data['priceChangePercent']),2)
+        volume = round(float(data['quoteVolume']),0)
+
+        #read Current Data in DB
+        conn = sqlite3.connect('tracker.db')
+        c = conn.cursor()
+
+        print("Inserting Market Data")
+        #Delete Existting Data when updating
+        try:
+            c.execute('INSERT OR REPLACE INTO market VALUES (?, ?, ?, ?)',
+                      (coin, price, percent, volume))
+            conn.commit()
+            conn.close()
+        except OperationalError:
+            print("Error In line 2")
+            create()
+            return
+        except IndexError:
+            c.execute('INSERT OR REPLACE INTO market VALUES (?, ?, ?, ?)',
+                      (coin, price, percent, volume))
+            conn.commit()
+            conn.close()
+
+        print("Market Data Added")
 
 def run():
-    binance()
+    market()
+    liquidation()
 
 while True:
     run()

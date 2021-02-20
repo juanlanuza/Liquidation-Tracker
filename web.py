@@ -8,17 +8,18 @@ app = Flask(__name__)
 def index():
     try:
         print("Checking for Todays Data")
+
         todayCalc = datetime.date.today()
         today = str(todayCalc)
 
-        now = datetime.datetime.now()
+        now = datetime.datetime.utcnow()
         yday = now - datetime.timedelta(days = 1)
-        ts = now.timestamp() * 1000
-        yts = yday.timestamp() * 1000
+        ts = now.strftime('%Y-%m-%d %H:%M:%S.%f')
+        yts = yday.strftime('%Y-%m-%d %H:%M:%S.%f')
         time = now.strftime("%m/%d/%Y, %H:%M:%S")
         ytime = yday.strftime("%m/%d/%Y, %H:%M:%S")
 
-        conn = sqlite3.connect('liquidation.db')
+        conn = sqlite3.connect('tracker.db')
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
         sizes = c.execute('SELECT coin,sum(size) FROM liquidation WHERE time > ? GROUP BY coin ORDER BY sum(size) DESC LIMIT 10', (yts,)).fetchall()
@@ -27,12 +28,12 @@ def index():
         conn.commit()
         conn.close()
 
-        conn = sqlite3.connect('market.db')
+        conn = sqlite3.connect('tracker.db')
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
-        top10 = c.execute('SELECT * FROM market WHERE date = ? ORDER BY percent DESC LIMIT 10', (today,)).fetchall()
-        low10 = c.execute('SELECT * FROM market WHERE date = ? ORDER BY percent ASC LIMIT 10', (today,)).fetchall()
-        markets = c.execute('SELECT * FROM market WHERE date = ?', (today,)).fetchall()
+        top10 = c.execute('SELECT * FROM market ORDER BY percent DESC LIMIT 10').fetchall()
+        low10 = c.execute('SELECT * FROM market ORDER BY percent ASC LIMIT 10').fetchall()
+        markets = c.execute('SELECT * FROM market').fetchall()
         conn.commit()
         conn.close()
 
@@ -46,17 +47,18 @@ def index():
 def livetracker():
     try:
         print("Checking for Todays Data")
+
         todayCalc = datetime.date.today()
         today = str(todayCalc)
 
-        now = datetime.datetime.now()
+        now = datetime.datetime.utcnow()
         yday = now - datetime.timedelta(days = 1)
-        ts = now.timestamp() * 1000
-        yts = yday.timestamp() * 1000
+        ts = now.strftime('%Y-%m-%d %H:%M:%S.%f')
+        yts = yday.strftime('%Y-%m-%d %H:%M:%S.%f')
         time = now.strftime("%m/%d/%Y, %H:%M:%S")
         ytime = yday.strftime("%m/%d/%Y, %H:%M:%S")
 
-        conn = sqlite3.connect('liquidation.db')
+        conn = sqlite3.connect('tracker.db')
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
         datas = c.execute('SELECT * FROM liquidation WHERE time > ? ORDER BY time DESC LIMIT 100', (yts,)).fetchall()
