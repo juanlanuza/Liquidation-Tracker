@@ -4,6 +4,11 @@ import datetime
 
 app = Flask(__name__)
 
+@app.template_filter()
+def currencyFormat(value):
+    value = float(value)
+    return "${:,.2f}".format(value)
+
 @app.route("/")
 def index():
     try:

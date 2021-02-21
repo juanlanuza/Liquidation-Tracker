@@ -18,7 +18,7 @@
 <div class="w3-content">
   <table id="rekt" class="w3-card-4 w3-table w3-centered w3-bordered">
     <tr class="w3-theme">
-      <th>Pair</th>
+      <th colspan="2">Pair</th>
       <th>Price (USDT)</th>
       <th>Trade Size (USDT)</th>
       <th>Side</th>
@@ -26,9 +26,10 @@
     </tr>
   {% for data in datas %}
     <tr class="{{ data['side'] }}">
+      <td><span class="table sbi sbi-{{ data['coin']|lower }}"></span></td>
       <td>{{ data['coin'] }}</td>
-      <td>{{ data['price'] }}</td>
-      <td>{{ data['size'] }}</td>
+      <td>{{ data['price']|currencyFormat }}</td>
+      <td>{{ data['size']|currencyFormat }}</td>
       <td>{{ data['side'] }}</td>
       <td>{{ data['time'] }}</td>
     </tr>
