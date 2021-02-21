@@ -17,6 +17,12 @@
     </style>
     <title>Binance 24h Liquidation Data</title>
     <script>
+      function openRightMenu() {
+        document.getElementById("rightMenu").style.display = "block";
+      }
+      function closeRightMenu() {
+        document.getElementById("rightMenu").style.display = "none";
+      }
       $( document ).ready(function() {
         $("#content").load("/livetracker")
       });

@@ -9,6 +9,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>Binance 24h Liquidation Data</title>
     <script>
+      function openRightMenu() {
+        document.getElementById("rightMenu").style.display = "block";
+      }
+      function closeRightMenu() {
+        document.getElementById("rightMenu").style.display = "none";
+      }
       function loadref(time) {
         setTimeout("location.reload(true) ;",time) ;
       }
@@ -195,12 +201,20 @@
   </head>
   <body class="w3-theme-l1">
     <div class="w3-row-padding">
-      <div class="w3-rest">
+      <div class="w3-threequarter">
         <h1 class="w3-wide"><span class="sbi sbi-btc"></span> Binance 24h Liquidation Data</h1>
       </div>
-      <div class="w3-center">
-        <h5 class="w3-wide">Data Collected From {{ ytime }} UTC Until {{ time }} UTC</h5>
+      <div class="w3-rest">
+        <button class="w3-button w3-xlarge w3-right" onclick="openRightMenu()">&#9776;</button>
+        <div class="w3-sidebar w3-bar-block w3-card w3-animate-right w3-theme" style="display:none;right:0;" id="rightMenu">
+          <button onclick="closeRightMenu()" class="w3-bar-item w3-button w3-large">Close &times;</button>
+          <a href="/" class="w3-bar-item w3-button">Statistic</a>
+          <a href="/tracker" class="w3-bar-item w3-button">Live Tracker</a>
+        </div>
       </div>
+    </div>
+    <div class="w3-content">
+      <h5 class="w3-wide w3-center">Data Collected From {{ ytime }} UTC Until {{ time }} UTC</h5>
     </div>
     <div class="w3-row">
       <div class="w3-card-4 w3-half w3-margin-right w3-margin-left w3-margin-bottom" id="chartLiqVolume" style="height: 370px;"></div>
