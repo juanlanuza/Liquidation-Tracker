@@ -4,10 +4,17 @@ import datetime
 
 app = Flask(__name__)
 
-@app.template_filter()
+@app.template_filter('currencyFormat')
 def currencyFormat(value):
     value = float(value)
     return "${:,.2f}".format(value)
+
+@app.template_filter('shortLong')
+def shortLong(value):
+    if value == "SELL":
+        return "LONG".format(value)
+    else:
+        return "SHORT".format(value)
 
 @app.route("/")
 def index():
@@ -63,6 +70,15 @@ def livetracker():
         time = now.strftime("%m/%d/%Y, %H:%M:%S")
         ytime = yday.strftime("%m/%d/%Y, %H:%M:%S")
 
+        min10 = now - datetime.timedelta(minutes = 10)
+        min10 = min10.strftime('%Y-%m-%d %H:%M:%S.%f')
+        hour1 = now - datetime.timedelta(hours = 1)
+        hour1 = hour1.strftime('%Y-%m-%d %H:%M:%S.%f')
+        hour6 = now - datetime.timedelta(hours = 6)
+        hour6 = hour6.strftime('%Y-%m-%d %H:%M:%S.%f')
+        hour12 = now - datetime.timedelta(hours = 12)
+        hour12 = hour12.strftime('%Y-%m-%d %H:%M:%S.%f')
+
         conn = sqlite3.connect('tracker.db')
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
@@ -70,7 +86,18 @@ def livetracker():
         conn.commit()
         conn.close()
 
-        return render_template('livetracker.html',time = time,ytime = ytime,ts = ts,yts = yts,datas = datas)
+        conn = sqlite3.connect('tracker.db')
+        conn.row_factory = lambda cursor, row: row[0]
+        c = conn.cursor()
+        dmin10 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (min10,)).fetchall()
+        dhour1 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (hour1,)).fetchall()
+        dhour6 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (hour6,)).fetchall()
+        dhour12 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (hour12,)).fetchall()
+        dday1 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (yts,)).fetchall()
+        conn.commit()
+        conn.close()
+
+        return render_template('livetracker.html',time = time,ytime = ytime,ts = ts,yts = yts,datas = datas,dmin10 = dmin10,dhour1 = dhour1,dhour6 = dhour6,dhour12 = dhour12,dday1 = dday1)
 
     except TypeError as missing_data:
         print(missing_data)
