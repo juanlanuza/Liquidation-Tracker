@@ -18,16 +18,16 @@
 <div class="w3-content">
   <table id="statistic" class="w3-card-4 w3-table w3-centered w3-bordered">
     <tr class="w3-theme">
-      <th>10m</th>
+      <th>15m</th>
+      <th>30m</th>
       <th>1h</th>
-      <th>6h</th>
       <th>12h</th>
       <th>24h</th>
     </tr>
     <tr>
-      <td>{{ dmin10[0]|currencyFormat }}</td>
+      <td>{{ dmin15[0]|currencyFormat }}</td>
+      <td>{{ dmin30[0]|currencyFormat }}</td>
       <td>{{ dhour1[0]|currencyFormat }}</td>
-      <td>{{ dhour6[0]|currencyFormat }}</td>
       <td>{{ dhour12[0]|currencyFormat }}</td>
       <td>{{ dday1[0]|currencyFormat }}</td>
     </tr>

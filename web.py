@@ -70,12 +70,12 @@ def livetracker():
         time = now.strftime("%m/%d/%Y, %H:%M:%S")
         ytime = yday.strftime("%m/%d/%Y, %H:%M:%S")
 
-        min10 = now - datetime.timedelta(minutes = 10)
-        min10 = min10.strftime('%Y-%m-%d %H:%M:%S.%f')
+        min15 = now - datetime.timedelta(minutes = 15)
+        min15 = min15.strftime('%Y-%m-%d %H:%M:%S.%f')
+        min30 = now - datetime.timedelta(minutes = 30)
+        min30 = min30.strftime('%Y-%m-%d %H:%M:%S.%f')
         hour1 = now - datetime.timedelta(hours = 1)
         hour1 = hour1.strftime('%Y-%m-%d %H:%M:%S.%f')
-        hour6 = now - datetime.timedelta(hours = 6)
-        hour6 = hour6.strftime('%Y-%m-%d %H:%M:%S.%f')
         hour12 = now - datetime.timedelta(hours = 12)
         hour12 = hour12.strftime('%Y-%m-%d %H:%M:%S.%f')
 
@@ -89,15 +89,15 @@ def livetracker():
         conn = sqlite3.connect('tracker.db')
         conn.row_factory = lambda cursor, row: row[0]
         c = conn.cursor()
-        dmin10 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (min10,)).fetchall()
+        dmin15 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (min15,)).fetchall()
+        dmin30 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (min30,)).fetchall()
         dhour1 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (hour1,)).fetchall()
-        dhour6 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (hour6,)).fetchall()
         dhour12 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (hour12,)).fetchall()
         dday1 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (yts,)).fetchall()
         conn.commit()
         conn.close()
 
-        return render_template('livetracker.html',time = time,ytime = ytime,ts = ts,yts = yts,datas = datas,dmin10 = dmin10,dhour1 = dhour1,dhour6 = dhour6,dhour12 = dhour12,dday1 = dday1)
+        return render_template('livetracker.html',time = time,ytime = ytime,ts = ts,yts = yts,datas = datas,dmin15 = dmin15,dmin30 = dmin30,dhour1 = dhour1,dhour12 = dhour12,dday1 = dday1)
 
     except TypeError as missing_data:
         print(missing_data)
