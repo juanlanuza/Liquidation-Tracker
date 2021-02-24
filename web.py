@@ -16,6 +16,11 @@ def shortLong(value):
     else:
         return "SHORT".format(value)
 
+@app.template_filter('mili2DateTime')
+def mili2DateTime(value):
+    time = value / 1000
+    return datetime.datetime.utcfromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S.%f')
+
 @app.route("/")
 def index():
     try:
@@ -26,8 +31,8 @@ def index():
 
         now = datetime.datetime.utcnow()
         yday = now - datetime.timedelta(days = 1)
-        ts = now.strftime('%Y-%m-%d %H:%M:%S.%f')
-        yts = yday.strftime('%Y-%m-%d %H:%M:%S.%f')
+        ts = now.timestamp() * 1000
+        yts = yday.timestamp() * 1000
         time = now.strftime("%m/%d/%Y, %H:%M:%S")
         ytime = yday.strftime("%m/%d/%Y, %H:%M:%S")
 
@@ -65,19 +70,19 @@ def livetracker():
 
         now = datetime.datetime.utcnow()
         yday = now - datetime.timedelta(days = 1)
-        ts = now.strftime('%Y-%m-%d %H:%M:%S.%f')
-        yts = yday.strftime('%Y-%m-%d %H:%M:%S.%f')
+        ts = now.timestamp() * 1000
+        yts = yday.timestamp() * 1000
         time = now.strftime("%m/%d/%Y, %H:%M:%S")
         ytime = yday.strftime("%m/%d/%Y, %H:%M:%S")
 
         min15 = now - datetime.timedelta(minutes = 15)
-        min15 = min15.strftime('%Y-%m-%d %H:%M:%S.%f')
+        min15 = min15.timestamp() * 1000
         min30 = now - datetime.timedelta(minutes = 30)
-        min30 = min30.strftime('%Y-%m-%d %H:%M:%S.%f')
+        min30 = min30.timestamp() * 1000
         hour1 = now - datetime.timedelta(hours = 1)
-        hour1 = hour1.strftime('%Y-%m-%d %H:%M:%S.%f')
+        hour1 = hour1.timestamp() * 1000
         hour12 = now - datetime.timedelta(hours = 12)
-        hour12 = hour12.strftime('%Y-%m-%d %H:%M:%S.%f')
+        hour12 = hour12.timestamp() * 1000
 
         conn = sqlite3.connect('tracker.db')
         conn.row_factory = sqlite3.Row

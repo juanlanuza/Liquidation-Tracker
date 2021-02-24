@@ -53,8 +53,7 @@ def liquidation():
         qty = round(float(lick['executedQty']),4)
         size = round(qty * price,0)
         side = lick['side']
-        x = int(lick['time']) / 1000
-        time = datetime.datetime.utcfromtimestamp(x).strftime('%Y-%m-%d %H:%M:%S.%f')
+        time = int(lick['time'])
 
         #read Current Data in DB
         conn = sqlite3.connect('tracker.db')

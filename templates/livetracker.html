@@ -49,7 +49,7 @@
       <td>{{ data['price']|currencyFormat }}</td>
       <td>{{ data['size']|currencyFormat }}</td>
       <td>{{ data['side']|shortLong }}</td>
-      <td>{{ data['time'] }}</td>
+      <td>{{ data['time']|mili2DateTime }}</td>
     </tr>
   {% endfor %}
     <tr class="w3-theme">
