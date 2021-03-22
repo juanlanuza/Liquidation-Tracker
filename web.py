@@ -16,6 +16,13 @@ def shortLong(value):
     else:
         return "SHORT".format(value)
 
+@app.template_filter('PercRedGreen')
+def PercRedGreen(value):
+    if value < 0:
+        return "LONG".format(value)
+    else:
+        return "SHORT".format(value)
+
 @app.template_filter('mili2DateTime')
 def mili2DateTime(value):
     time = value / 1000
@@ -39,9 +46,9 @@ def index():
         conn = sqlite3.connect('tracker.db')
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
-        sizes = c.execute('SELECT coin,sum(size) FROM liquidation WHERE time > ? GROUP BY coin ORDER BY sum(size) DESC LIMIT 10', (yts,)).fetchall()
-        amounts = c.execute('SELECT coin,count(coin) FROM liquidation WHERE time > ? GROUP BY coin ORDER BY sum(size) DESC LIMIT 10', (yts,)).fetchall()
-        datas = c.execute('SELECT coin,avg(size),avg(qty),price FROM liquidation WHERE time > ? GROUP BY coin', (yts,)).fetchall()
+        sizes = c.execute('SELECT coin,sum(size) FROM liquidation WHERE time >= ? GROUP BY coin ORDER BY sum(size) DESC LIMIT 10', (yts,)).fetchall()
+        amounts = c.execute('SELECT coin,count(coin) FROM liquidation WHERE time >= ? GROUP BY coin ORDER BY sum(size) DESC LIMIT 10', (yts,)).fetchall()
+        datas = c.execute('SELECT coin,avg(size),avg(qty),price FROM liquidation WHERE time >= ? GROUP BY coin', (yts,)).fetchall()
         conn.commit()
         conn.close()
 
@@ -87,35 +94,74 @@ def livetracker():
         conn = sqlite3.connect('tracker.db')
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
-        datas = c.execute('SELECT * FROM liquidation WHERE time > ? ORDER BY time DESC LIMIT 100', (yts,)).fetchall()
+        datas = c.execute('SELECT * FROM liquidation WHERE time >= ? ORDER BY time DESC LIMIT 100', (yts,)).fetchall()
         conn.commit()
         conn.close()
 
         conn = sqlite3.connect('tracker.db')
         conn.row_factory = lambda cursor, row: row[0]
         c = conn.cursor()
-        dmin15 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (min15,)).fetchall()
-        dmin30 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (min30,)).fetchall()
-        dhour1 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (hour1,)).fetchall()
-        dhour12 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (hour12,)).fetchall()
-        dday1 = c.execute('SELECT sum(size) FROM liquidation WHERE time > ?', (yts,)).fetchall()
+        dmin15 = c.execute('SELECT sum(size) FROM liquidation WHERE time >= ?', (min15,)).fetchall()
+        dmin30 = c.execute('SELECT sum(size) FROM liquidation WHERE time >= ?', (min30,)).fetchall()
+        dhour1 = c.execute('SELECT sum(size) FROM liquidation WHERE time >= ?', (hour1,)).fetchall()
+        dhour12 = c.execute('SELECT sum(size) FROM liquidation WHERE time >= ?', (hour12,)).fetchall()
+        dday1 = c.execute('SELECT sum(size) FROM liquidation WHERE time >= ?', (yts,)).fetchall()
         conn.commit()
         conn.close()
 
-        return render_template('livetracker.html',time = time,ytime = ytime,ts = ts,yts = yts,datas = datas,dmin15 = dmin15,dmin30 = dmin30,dhour1 = dhour1,dhour12 = dhour12,dday1 = dday1)
+        return render_template('tracker.html',time = time,ytime = ytime,ts = ts,yts = yts,datas = datas,dmin15 = dmin15,dmin30 = dmin30,dhour1 = dhour1,dhour12 = dhour12,dday1 = dday1)
 
     except TypeError as missing_data:
         print(missing_data)
-        return render_template('livetracker.html')
+        return render_template('tracker.html')
+
+@app.route("/livemarket")
+def livemarket():
+    try:
+        print("Checking for Todays Data")
+
+        todayCalc = datetime.date.today()
+        today = str(todayCalc)
+
+        now = datetime.datetime.utcnow()
+        yday = now - datetime.timedelta(days = 1)
+        ts = now.timestamp() * 1000
+        yts = yday.timestamp() * 1000
+        time = now.strftime("%m/%d/%Y, %H:%M:%S")
+        ytime = yday.strftime("%m/%d/%Y, %H:%M:%S")
+
+        conn = sqlite3.connect('tracker.db')
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+        datas = c.execute('SELECT * FROM market ORDER BY coin ASC').fetchall()
+        conn.commit()
+        conn.close()
+
+        return render_template('market.html',time = time,ytime = ytime,ts = ts,yts = yts,datas = datas)
+
+    except TypeError as missing_data:
+        print(missing_data)
+        return render_template('market.html')
 
 @app.route("/tracker")
 def tracker():
     try:
-        return render_template('tracker.html')
+        holder = "/livetracker"
+        return render_template('holder.html',holder = holder)
 
     except TypeError as missing_data:
         print(missing_data)
-        return render_template('tracker.html')
+        return render_template('holder.html')
+
+@app.route("/market")
+def market():
+    try:
+        holder = "/livemarket"
+        return render_template('holder.html',holder = holder)
+
+    except TypeError as missing_data:
+        print(missing_data)
+        return render_template('holder.html')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=80,debug=True)

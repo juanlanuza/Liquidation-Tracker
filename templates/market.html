@@ -7,6 +7,7 @@
     <div class="w3-sidebar w3-bar-block w3-card w3-animate-right w3-theme" style="display:none;right:0;" id="rightMenu">
       <button onclick="closeRightMenu()" class="w3-bar-item w3-button w3-large">Close &times;</button>
       <a href="/" class="w3-bar-item w3-button fa fa-pie-chart"> Statistic</a>
+      <a href="/market" class="w3-bar-item w3-button fa fa-table"> Live Market</a>
       <a href="/tracker" class="w3-bar-item w3-button fa fa-table"> Live Tracker</a>
       <a href="https://github.com/AtsutaneDotNet/Liquidation-Tracker" class="w3-bar-item w3-button fa fa-github"> Visit GitHub</a>
     </div>
@@ -16,48 +17,27 @@
   <h5 class="w3-wide w3-center">Data Collected From {{ ytime }} UTC Until {{ time }} UTC</h5>
 </div>
 <div class="w3-content">
-  <table id="statistic" class="w3-card-4 w3-table w3-centered w3-bordered">
-    <tr class="w3-theme">
-      <th>15m</th>
-      <th>30m</th>
-      <th>1h</th>
-      <th>12h</th>
-      <th>24h</th>
-    </tr>
-    <tr>
-      <td>{{ dmin15[0]|currencyFormat }}</td>
-      <td>{{ dmin30[0]|currencyFormat }}</td>
-      <td>{{ dhour1[0]|currencyFormat }}</td>
-      <td>{{ dhour12[0]|currencyFormat }}</td>
-      <td>{{ dday1[0]|currencyFormat }}</td>
-    </tr>
-  </table>
-</div>
-<div class="w3-content">
   <table id="rekt" class="w3-card-4 w3-table w3-centered w3-bordered">
     <tr class="w3-theme">
       <th colspan="2">Pair</th>
-      <th>Price</th>
-      <th>Trade Size</th>
-      <th>Side</th>
-      <th>Time</th>
+      <th>Last Price</th>
+      <th>24h Change</th>
+      <th>24h Volume</th>
     </tr>
   {% for data in datas %}
-    <tr class="{{ data['side']|shortLong }}">
+    <tr>
       <td><span class="table sbi sbi-{{ data['coin']|lower }}"></span></td>
       <td>{{ data['coin'] }}</td>
       <td>{{ data['price']|currencyFormat }}</td>
-      <td>{{ data['size']|currencyFormat }}</td>
-      <td>{{ data['side']|shortLong }}</td>
-      <td>{{ data['time']|mili2DateTime }}</td>
+      <td class="{{ data['percent']|PercRedGreen }}">{{ data['percent'] }}%</td>
+      <td>{{ data['volume']|currencyFormat }}</td>
     </tr>
   {% endfor %}
     <tr class="w3-theme">
       <th colspan="2">Pair</th>
-      <th>Price</th>
-      <th>Trade Size</th>
-      <th>Side</th>
-      <th>Time</th>
+      <th>Last Price</th>
+      <th>24h Change</th>
+      <th>24h Volume</th>
     </tr>
   </table>
 </div>
