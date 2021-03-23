@@ -6,8 +6,11 @@ app = Flask(__name__)
 
 @app.template_filter('currencyFormat')
 def currencyFormat(value):
-    value = float(value)
-    return "${:,.2f}".format(value)
+    if value is None:
+        return value
+    else:
+        value = float(value)
+        return "${:,.2f}".format(value)
 
 @app.template_filter('shortLong')
 def shortLong(value):
